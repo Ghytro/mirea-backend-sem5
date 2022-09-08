@@ -34,7 +34,7 @@ func main() {
 	api.Get("/hello", func(c *fiber.Ctx) error {
 		return c.SendString("Hello from server! (get handler)")
 	})
-	api.Get("/hello", func(c *fiber.Ctx) error {
+	api.Post("/hello", func(c *fiber.Ctx) error {
 		return c.SendString("Hello from server! (post handler)")
 	})
 	api.Get("/db", func(c *fiber.Ctx) error {
