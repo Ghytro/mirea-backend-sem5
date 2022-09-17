@@ -76,7 +76,7 @@ type Circle struct {
 
 func (c *Circle) HTMLString() string {
 	return fmt.Sprintf(`
-		<circle cx="%d" cy="%d" r="%d" stroke="black" stroke-width="4" fill=%q />`,
+		<circle cx="%d" cy="%d" r="%d" stroke="black" stroke-width="0" fill=%q />`,
 		c.Center.X,
 		c.Center.Y,
 		c.Radius,
@@ -91,7 +91,7 @@ type Rectangle struct {
 
 func (r *Rectangle) HTMLString() string {
 	return fmt.Sprintf(`
-		<rect width="%d" height="%d" style="fill:%s;stroke-width:10;stroke:rgb(0,0,0)" />`,
+		<rect width="%d" height="%d" style="fill:%s;stroke-width:0;stroke:rgb(0,0,0)" />`,
 		r.Width,
 		r.Height,
 		fillToString(r.Fill),
@@ -106,7 +106,7 @@ type Triangle struct {
 func (r *Triangle) HTMLString() string {
 	return fmt.Sprintf(`
 	<polygon points="%d,%d %d,%d %d,%d"
-	style="fill:%s;stroke:black;stroke-width:5;fill-rule:evenodd;" />`,
+	style="fill:%s;stroke:black;stroke-width:0;fill-rule:evenodd;" />`,
 		r.Points[0].X, r.Points[0].Y,
 		r.Points[1].X, r.Points[1].Y,
 		r.Points[2].X, r.Points[2].Y,

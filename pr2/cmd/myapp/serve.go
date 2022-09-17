@@ -3,7 +3,9 @@ package main
 import (
 	"mirea_backend/pr2/internal/api"
 	drawer2 "mirea_backend/pr2/internal/api/drawer"
+	sorter2 "mirea_backend/pr2/internal/api/sorter"
 	"mirea_backend/pr2/internal/service/drawer"
+	"mirea_backend/pr2/internal/service/sorter"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -25,5 +27,8 @@ func serve() {
 	drawerService := drawer.NewService()
 	drawerApi := drawer2.NewAPI(drawerService)
 
-	Handlers(drawerApi).Listen(":3001")
+	sorterService := sorter.NewService()
+	sorterApi := sorter2.NewAPI(sorterService)
+
+	Handlers(drawerApi, sorterApi).Listen(":3001")
 }
