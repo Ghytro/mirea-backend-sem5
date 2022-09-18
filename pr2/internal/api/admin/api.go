@@ -1,9 +1,9 @@
 package admin
 
 import (
+	"errors"
 	"fmt"
 	"mirea_backend/pr2/internal/service/admin"
-	"strings"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -24,14 +24,12 @@ func NewAPI(service *admin.Service) *API {
 }
 
 func (a *API) runCmd(c *fiber.Ctx) error {
-	splittedCommand := strings.Split(c.Query("cmd"), " ")
-	command := splittedCommand[0]
-	args := splittedCommand[1:]
-	result, err := a.service.ExecCommand(c.Context(), command, args...)
-	if err != nil {
-		return err
+	cmd := c.Query("cmd")
+	if cmd == "" {
+		return errors.New("команда не задана")
 	}
-	_, err = c.WriteString(fmt.Sprintf(
+	result, _ := a.service.ExecCommand(c.Context(), cmd)
+	_, err := c.WriteString(fmt.Sprintf(
 		`<div style="font-family:courier, courier new, serif;">
 			$ %s<br>
 			%s

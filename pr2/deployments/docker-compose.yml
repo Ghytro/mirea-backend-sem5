@@ -9,7 +9,7 @@ services:
       dockerfile: ./deployments/Dockerfile.app
       target: prod
     environment:
-      - DB_URL=postgres://postgres:mydbpassword@dockerdev.db:5432/postgres?sslmode=disable&
+      - SHELL_PATH=/bin/sh
 
   web-server:
     image: nginx

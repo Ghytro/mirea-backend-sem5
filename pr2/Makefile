@@ -5,7 +5,7 @@ start.local.windows:
 	cd cmd/myapp && go build -o app.exe && start app.exe
 
 start.local:
-	cd cmd/myapp && go build -o app && ./app
+	cd cmd/myapp && go build -o app && SHELL_PATH=/bin/bash ./app
 
 start.db:
 	cd deployments && docker compose db -d
