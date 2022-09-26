@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/reset.css">
+    <link rel="stylesheet" href="style/common.css">
+    <link rel="stylesheet" href="style/about.css">
+    <link rel="stylesheet" href="style/animation.css">
+    <title>Michael Korobkov | Backend Developer | About</title>
+</head>
+<body>
+    <header>
+        <a class="header-home" href="index.html">
+            <img src="img/home.png" width=100%>
+        </a>
+        <div class="header-right">
+            <a class="smooth-underline" href="about.html">About</a>
+            <a class="smooth-underline" href="stack.html">Stack</a>
+            <a class="smooth-underline" href="projects.html">Projects</a>
+            <a class="smooth-underline" href="contact.html">Contact</a>
+        </div>
+        <div class="toggle" onclick="toggleHeader()"></div>
+    </header>
+    <div class="content-container bottom-to-top-animation">
+        <div class="title-container">
+            <h1 class="gradient-text small-title">ABOUT ME</h1>
+            <h1 class="big-title">Performance & reliability is the key</h1>
+        </div>
+        <div class="brief-desc-container left-to-right-animation animation-order-2">
+            <div class="brief-desc-element">
+                <h1 class="brief-desc-title">What I can do for you</h1>
+                <div class="brief-desc-text">Faster, reliable, better products that users love. Here's all the services i provide:</div>
+                <ul>
+                    <li>Backend development</li>
+                    <li>Designing high-performance backend for applications</li>
+                    <li>Supporting existing products, refactoring, adding new functionality</li>
+                </ul>
+            </div>
+            <div class="brief-desc-element left-to-right-animation animation-order-2">
+                <h1 class="brief-desc-title">Technologies I'm fluent with</h1>
+                <div class="brief-desc-text">Every developer needs the right tools to get the job done. Here's my stack briefly:</div>
+                <ul>
+                    <li>C++</li>
+                    <li>Python</li>
+                    <li>Linux</li>
+                    <li>Databases</li>
+                </ul>
+                <div class="brief-desc-el-link-wrapper">
+                    <a class="stack-link smooth-underline" href="stack.html">See detailed stack description</a>
+                </div>
+            </div>
+            <div class="brief-desc-element left-to-right-animation animation-order-2">
+                <h1 class="brief-desc-title">What can you expect</h1>
+                <div class="brief-desc-text">I develop applications that are more than efficient. To build a good application you need:</div>
+                <ul>
+                    <li>Modern technologies</li>
+                    <li>Elaborate architecture</li>
+                    <li>Clean code</li>
+                </ul>
+                <div class="brief-desc-el-link-wrapper">
+                    <a class="stack-link smooth-underline" href="projects.html">See my projects</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="experience-wrapper left-to-right-animation animation-order-3">
+        <div class="experience-column">
+            <h1>🎓&nbsp;Education</h1>
+            <a class="education-item-wrapper" href="https://mipt.ru/abiturs/schools/" target="_blank">
+                <div class="heading">
+                    <h2>MIPT Summer School</h2>
+                    <h3>Competitive programming section</h3>
+                </div>
+                <div class="date-with-link-arrow">
+                    <span>🔗</span>
+                    <ul><li><nobr>Summer 2019</nobr></li></ul>
+                </div>
+            </a>
+            <a class="education-item-wrapper" href="https://www.mirea.ru/" target="_blank">
+                <div class="heading">
+                    <h2>RTU MIREA</h2>
+                    <h3>Bachelor in computer science</h3>
+                </div>
+                <div class="date-with-link-arrow">
+                    <span>🔗</span>
+                    <ul><li><nobr>2020-Current</nobr></li></ul>
+                </div>
+            </a>
+        </div>
+        <div class="experience-column">
+            <h1>⌨️&nbsp;Programming&nbsp;experience</h1>
+            <a class="education-item-wrapper" href="https://github.com/Ghytro" target="_blank">
+                <div class="heading-with-icon">
+                    <div style="width: 65px; padding: 5px;">
+                        <img src="img/github.png" width="100%">
+                    </div>
+                    <div>
+                        <h2>Freelancing, pet projects</h2>
+                        <h3 style="color: #555">Chatbots on Python, backend on C++, etc</h3>
+                    </div>
+                </div>
+                <div class="date-with-link-arrow">
+                    <span>🔗</span>
+                    <ul><li><nobr>2019-2021</nobr></li></ul>
+                </div>
+            </a>
+            <a class="education-item-wrapper" href="https://go.yandex/" target="_blank">
+                <div class="heading-with-icon">
+                    <div style="width: 65px; padding: 10px;">
+                        <img src="img/yandex_go.png" width="100%">
+                    </div>
+                    <div>
+                        <h2>Yandex Go</h2>
+                        <h3 style="color: #555">C++ Developer</h3>
+                    </div>
+                </div>
+                <div class="date-with-link-arrow">
+                    <span>🔗</span>
+                    <ul><li>2021-Current</li></ul>
+                </div>
+            </a>
+        </div>
+    </div>
+    <script src="scripts/animation.js"></script>
+    <script src="scripts/main.js"></script>
+    <script>window.onload = loadAnimation</script>
+</body>
+</html>

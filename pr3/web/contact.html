@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/reset.css">
+    <link rel="stylesheet" href="style/common.css">
+    <link rel="stylesheet" href="style/contact.css">
+    <link rel="stylesheet" href="style/animation.css">
+    <title>Michael Korobkov | Backend Developer | Contact me</title>
+    <script src="scripts/contact.js"></script>
+</head>
+<body>
+    <header>
+        <a class="header-home" href="index.html">
+            <img src="img/home.png" width=100%>
+        </a>
+        <div class="header-right">
+            <a class="smooth-underline" href="about.html">About</a>
+            <a class="smooth-underline" href="stack.html">Stack</a>
+            <a class="smooth-underline" href="projects.html">Projects</a>
+            <a class="smooth-underline" href="contact.html">Contact</a>
+        </div>
+        <div class="toggle" onclick="toggleHeader()"></div>
+    </header>
+    <div class="content-container">
+        <div class="contact-card bottom-to-top-animation">
+            <h1>Fill in the form to send me a message</h1>
+            <form name="concact-me" method="post" action="mailto:korobkov200364@gmail.com">
+                <input type="text" name="name" placeholder="Your name" onkeyup="updFormAction()" required><br><br>
+                <input type="email" name="email" placeholder="Your e-mail" onkeyup="updFormAction()" required><br><br>
+                <textarea name="message" placeholder="Write your message here" onkeyup="updFormAction()" required></textarea><br><br>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
+    <script src="scripts/main.js"></script>
+    <script src="scripts/animation.js"></script>
+    <script>window.onload = loadAnimation;</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+.main-content-container {
+    height: 91vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    font-size: 1.7em;
+    justify-content: space-around;
+}
+
+@media (max-width: 750px) {
+    .main-content-container {
+        font-size: initial;
+    }
+
+    .brief-description {
+        width: 75vw !important;
+    }
+}
+
+.main-text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.main-button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    padding-top: 50px;
+}
+
+form[action="contact.html"] {
+    height: 50px;
+}
+
+.brief-description {
+    width: 50vw;
+}
+
+#contact-me-button {
+    background: var(--contact-button-bg);
+    transition: var(--transition-time);
+    color: var(--contact-button-text-color);
+    border: solid 4px var(--contact-button-bg);
+}
+
+#contact-me-button:hover {
+    cursor: pointer;
+}
+
+#contact-me-button-box-shadow {
+    position: relative;
+    top: -38px;
+    left: 12px;
+    width: 100%;
+    height: 50px;
+    z-index: -1;
+    background: var(--blue-green-gradient-vertical);
+    transition: var(--transition-time);
+}
+
+.cv-link {
+    color: #000;
+    text-decoration: none;
+}
+
+.cv-link.smooth-underline::after {
+    background: #000;
+    height: 3px;
+}
+
+#cv-arrow {
+    opacity: 0;
+    transition: var(--animation-transition-time);
+    position: relative;
+    left: 10px;
+}
+
+.contact-me-button {
+    color: #fff;
+    background-color: #000;
+    transition: var(--transition-time);
+    border: 0;
+    position: relative;
+    bottom: 0px;
+    border: solid 3px #000;
+}
+
+.contact-me-button:hover {
+    border-radius: 30px;
+    bottom: 5px;
+    background-color: transparent;
+    color: #000;
+    cursor: pointer;
+}

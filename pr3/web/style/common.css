@@ -1,0 +1,124 @@
+:root {
+    --text-color: #000;
+    --background-color: #fff;
+    --header-background-color: #343434;
+    --header-text-color: #aaaaaa;
+    --header-text-color-hover: #ffffff;
+    --transition-time: .3s;
+    --contact-button-bg: #000;
+    --contact-button-text-color: #fff;
+    --blue-green-gradient-vertical: -webkit-linear-gradient(#07C3F2, #21D789);
+    --animation-transition-time: .5s;
+}
+
+header {
+    height: 9vh;
+    overflow: hidden;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background-color: var(--header-background-color);
+    transition: var(--transition-time);
+}
+
+.header-home {
+    width: 32px;
+    float: left;
+    text-align: center;
+    font-size: 18px;
+    line-height: 25px;
+    transition: var(--transition-time);
+}
+
+.header-home:hover {
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.header-right {
+    float: right;
+}
+
+.toggle {
+    display: none;
+    cursor: pointer;
+}
+
+@media (max-width: 750px) {
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    header.active {
+        height: 20vh;
+        overflow: auto;
+    }
+
+    header.active .header-right {
+        float: initial;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .header-right {
+        display: none;
+    }
+
+    .toggle {
+        display: block;
+        width: 32px;
+        height: 32px;
+        background-image: url("https://img.icons8.com/material/48/ffffff/menu--v1.png");
+        background-size: 100%;
+    }
+
+    header.active .toggle {
+        background-image: url("https://img.icons8.com/material/48/ffffff/delete-sign--v1.png")
+    }
+
+    header.active .header-right a {
+        margin-left: 0;
+    }
+}
+
+.smooth-underline {
+    display: inline-block;
+}
+
+.smooth-underline::after {
+    content: '';
+    width: 0px;
+    display: block;
+    transition: var(--transition-time);
+}
+
+.smooth-underline:hover::after {
+    width: 100%;
+}
+
+.header-right .smooth-underline::after {
+    background: var(--header-text-color-hover);
+    height: 2px;
+}
+
+.header-right .smooth-underline:hover {
+    color: var(--header-text-color-hover);
+}
+
+.header-right a {
+    color: var(--header-text-color);
+    text-decoration: none;
+    font-size: 18px;
+    transition: var(--transition-time);
+    margin-left: 50px;
+}
+
+.gradient-text {
+    background: var(--blue-green-gradient-vertical);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

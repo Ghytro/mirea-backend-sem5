@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/reset.css">
+    <link rel="stylesheet" href="style/common.css">
+    <link rel="stylesheet" href="style/stack.css">
+    <link rel="stylesheet" href="style/animation.css">
+    <title>Michael Korobkov | Backend Developer | Stack</title>
+</head>
+<body>
+    <header>
+        <a class="header-home" href="index.html">
+            <img src="img/home.png" width=100%>
+        </a>
+        <div class="header-right">
+            <a class="smooth-underline" href="about.html">About</a>
+            <a class="smooth-underline" href="stack.html">Stack</a>
+            <a class="smooth-underline" href="projects.html">Projects</a>
+            <a class="smooth-underline" href="contact.html">Contact</a>
+        </div>
+        <div class="toggle" onclick="toggleHeader()"></div>
+    </header>
+    <div class="content-container">
+        <div class="title-container bottom-to-top-animation">
+            <h1 class="gradient-text small-title">STACK</h1>
+            <h1 class="big-title">Full description of technologies I use</h1>
+            <div style="text-align: center">(Tap to view description)</div>
+        </div>
+        <div class="stack-container plain-animation animation-order-2">
+            <div id="stack-el-left1" class="stack-element">
+                <img id="left-img1" src="img/cpp.png" width="100%" onmouseover="stackElementOnMouseOver('left', 1)" onmouseout="stackElementOnMouseOut('left', 1)">
+                <div id="left-text1">
+                    <h2>C++ is the language that helps me in many situations</h2>
+                    <ul>
+                        <li><h3>New Opportunities with 2020 standard</h3></li>
+                        <li><h3>Unattainable performance & full memory control</h3></li>
+                    </ul>
+                </div>
+            </div>
+            <div id="stack-el-right1" class="stack-element">
+                <img id="right-img1" src="img/python.png" width="100%" onmouseover="stackElementOnMouseOver('right', 1)" onmouseout="stackElementOnMouseOut('right', 1)">
+                <div id="right-text1">
+                    <h2>Python - best choice, if you want to see your results as fast as possible</h2>
+                    <ul>
+                        <li><h3>High-level language with many libraries</h3></li>
+                        <li><h3>Known for simplicity & popularity</h3></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="stack-container plain-animation animation-order-3">
+            <div id="stack-el-left2" class="stack-element">
+                <img id="left-img2" src="img/qt.png" width="100%" onmouseover="stackElementOnMouseOver('left', 2)" onmouseout="stackElementOnMouseOut('left', 2)">
+                <div id="left-text2">
+                    <h2>Qt - cross-platform framework for building applications</h2>
+                    <ul>
+                        <li><h3>Great opportunities for developing desktop, mobile & embed applications with C++, Python or JS</h3></li>
+                        <li><h3>Includes many instruments for building backend too</h3></li>
+                    </ul>
+                </div>
+            </div>
+            <div id="stack-el-right2" class="stack-element">
+                <img id="right-img2" src="img/sql.png" width="100%" onmouseover="stackElementOnMouseOver('right', 2)" onmouseout="stackElementOnMouseOut('right', 2)">
+                <div id="right-text2">
+                    <h2>SQL - universal database query language, supported by DBMS like:</h2>
+                    <ul>
+                        <li><h3>MySQL</h3></li>
+                        <li><h3>PostgreSQL</h3></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="scripts/stack.js"></script>
+    <script src="scripts/animation.js"></script>
+    <script src="scripts/main.js"></script>
+    <script>window.onload = loadAnimation</script>
+</body>
+</html>

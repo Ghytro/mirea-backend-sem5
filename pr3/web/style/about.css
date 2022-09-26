@@ -1,0 +1,131 @@
+.small-title {
+    font-size: 30px;
+    text-align: center;
+}
+
+.big-title {
+    font-size: 50px;
+    text-align: center;
+}
+
+.container-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin: 0;
+    padding: 0;
+}
+
+.content-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5vh;
+}
+
+.title-container {
+    width: 100%;
+    margin-top: 10vh;
+}
+
+.brief-desc-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    margin-top: 10vh;
+    margin-bottom: 10vh;
+    flex-wrap: wrap;
+}
+
+.brief-desc-element {
+    display: flex;
+    flex-direction: column;
+    width: 325px;
+    justify-content: space-between;
+    align-content: space-around;
+}
+
+.brief-desc-title {
+    font-size: 24px;
+    text-align: center;
+}
+
+.brief-desc-text {
+    font-weight: lighter;
+    font-size: 16px;
+}
+
+.brief-desc-element li {
+    font-weight: bold;
+}
+
+.stack-link {
+    text-decoration: none;
+    color: #000;
+    font-weight: 800;
+}
+
+.stack-link.smooth-underline::after {
+    background: #000;
+    height: 2.07px;
+}
+
+.brief-desc-el-link-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.experience-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.experience-column {
+    width: 600px;
+    margin-bottom: 5vh;
+}
+
+.experience-column h1 {
+    margin-bottom: 35px;
+}
+
+.education-item-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    text-decoration: none;
+    color: #000;
+    width: 40vw;
+    border: solid 1px transparent;
+    border-radius: 30px;
+    transition: var(--transition-time);
+    padding: 15px;
+    position: relative;
+    bottom: 0px;
+    width: 100%;
+}
+
+.education-item-wrapper:hover {
+    border-color: #000;
+    bottom: 10px;
+}
+
+.education-item-wrapper .heading h3 {
+    color: #555;
+}
+
+.education-item-wrapper .heading-with-icon {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.education-item-wrapper .date-with-link-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}

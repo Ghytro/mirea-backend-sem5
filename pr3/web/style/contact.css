@@ -1,0 +1,72 @@
+.content-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 91vh;
+}
+
+.contact-card {
+    padding: 30px;
+    background: var(--header-background-color);
+    border: solid 4px #aaa;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+@media (max-width: 750px) {
+    .contact-card {
+        width: 80vw;
+    }
+
+    .contact-card input[type="text"] {
+        width: 50vw;
+    }
+
+    .contact-card input[type="email"] {
+        width: 50vw;
+    }
+
+    .contact-card input[type="submit"] {
+        width: 100%;
+    }
+}
+
+.contact-card h1 {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.contact-card input {
+    border: solid 2px var(--header-text-color);
+    border-radius: 30px;
+    width: 20vw;
+    padding: 5px;
+}
+
+.contact-card input[type="submit"] {
+    width: 50%;
+    position: relative;
+    transition: var(--transition-time);
+    bottom: 0;
+}
+
+.contact-card input[type="submit"]:hover {
+    bottom: 5px;
+    cursor: pointer;
+}
+
+.contact-card form {
+    text-align: center;
+}
+
+.contact-card textarea {
+    border: solid 2px var(--header-text-color);
+    resize: none;
+    width: 100%;
+    border-radius: 5px;
+    padding: 5px;
+}

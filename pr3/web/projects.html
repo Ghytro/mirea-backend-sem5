@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/reset.css">
+    <link rel="stylesheet" href="style/common.css">
+    <link rel="stylesheet" href="style/projects.css">
+    <link rel="stylesheet" href="style/animation.css">
+    <title>Michael Korobkov | Backend Developer | Projects</title>
+    <script src="scripts/animation.js"></script>
+    <script src="scripts/projects.js"></script>
+</head>
+<body>
+    <header>
+        <a class="header-home" href="index.html">
+            <img src="img/home.png" width=100%>
+        </a>
+        <div class="header-right">
+            <a class="smooth-underline" href="about.html">About</a>
+            <a class="smooth-underline" href="stack.html">Stack</a>
+            <a class="smooth-underline" href="projects.html">Projects</a>
+            <a class="smooth-underline" href="contact.html">Contact</a>
+        </div>
+        <div class="toggle" onclick="toggleHeader()"></div>
+    </header>
+    <div class="content-container">
+        <div class="title-container bottom-to-top-animation">
+            <h1 class="gradient-text small-title">MY PROJECTS</h1>
+            <h1 class="big-title">Here are my most valuable projects</h1>
+        </div>
+        <div id="gallery" class="left-to-right-animation animation-order-2">
+            <div class="gallery-arrow">
+                <img id="gallery-left-arrow" src="https://img.icons8.com/ios/24/000000/back--v1.png" onclick="changeElement(decGalleryIndex)">
+            </div>
+            <div id="gallery-content">
+                <div class="gallery-content-left">
+                    <h1>Server and client for TCP messenger on QT</h1>
+                    <h2>Just a messenger with it's ordinary purpose, pet-project for studying TCP. Both client and server are written on QT5</h2>
+                    <h3><a class="smooth-underline" href="https://github.com/Ghytro/QTChatClient" target="_blank">Go to repo on Github</a></h3>
+                </div>
+                <div class="gallery-content-right">
+                    <img src="img/messenger.png">
+                </div>
+
+                <div class="gallery-content-left" style="display: none; opacity: 0;">
+                    <h1>Library to work with graphs on C++17</h1>
+                    <h2>The library supports all operations for building/modifying graphs, finding routes between nodes with online connectivity components supporting</h2>
+                    <h3><a class="smooth-underline" href="https://github.com/Ghytro/cpp-libs" target="_blank">Go to repo on Github</a></h3>
+                </div>
+                <div class="gallery-content-right" style="display: none; opacity: 0;">
+                    <img src="img/graph.png">
+                </div>
+
+                <div class="gallery-content-left" style="display: none; opacity: 0;">
+                    <h1>Chatbots on Python</h1>
+                    <h2>Built several chatbots for Telegram/Discord such as:</h2>
+                    <ul>
+                        <li><a class="github-link" href="https://github.com/Ghytro/YTMusicBot">Discord music bot, that works via YT-DL</a></li>
+                        <li><a class="github-link" href="https://gitlab.com/muradovgitlab/Starosta_telegram">Telegram bot - university group manager</a></li>
+                        <li><a class="github-link" href="https://github.com/Ghytro/MemesterBot">Telegram bot - bot that can send news feed posts from vk.com</a></li>
+                    </ul>
+                    <h3>Click on the list item to go to Github repo</h3>
+                </div>
+                <div class="gallery-content-right" style="display: none; opacity: 0;">
+                    <img src="https://cdn-icons-png.flaticon.com/512/4233/4233830.png">
+                </div>
+
+                <div class="gallery-content-left" style="display: none; opacity: 0;">
+                    <h1>Competitive programming guide website with testing system</h1>
+                    <h2>Kind of analog of LeetCode or CodeForces. Backend made on PHP/C++</h2>
+                    <h3><a class="smooth-underline" href="https://github.com/LargonG/WOP" target="_blank">Go to repo on Github</a></h3>
+                </div>
+                <div class="gallery-content-right" style="display: none; opacity: 0;">
+                    <img src="img/website.png">
+                </div>
+            </div>
+            <div class="gallery-arrow">
+                <img id="gallery-right-arrow" src="https://img.icons8.com/ios/24/000000/back--v1.png" style="transform: rotate(180deg);" onclick="changeElement(incGalleryIndex)">
+            </div>
+        </div>
+    </div>
+    <script>
+        window.onload = function() {
+            loadAnimation();
+            loadGalleryElements();
+        }
+    </script>
+    <script src="scripts/main.js"></script>
+</body>
+</html>

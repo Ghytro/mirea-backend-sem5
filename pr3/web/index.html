@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/reset.css">
+    <link rel="stylesheet" href="style/common.css">
+    <link rel="stylesheet" href="style/main.css">
+    <link rel="stylesheet" href="style/animation.css">
+    <title>Michael Korobkov | Backend Developer | Greeting page</title>
+</head>
+<body>
+    <header>
+        <a class="header-home" href="index.html">
+            <img src="img/home.png" width=100%>
+        </a>
+        <div class="header-right">
+            <a class="smooth-underline" href="about.html">About</a>
+            <a class="smooth-underline" href="stack.html">Stack</a>
+            <a class="smooth-underline" href="projects.html">Projects</a>
+            <a class="smooth-underline" href="contact.html">Contact</a>
+        </div>
+        <div class="toggle" onclick="toggleHeader()"></div>
+    </header>
+    <div class="main-content-container">
+        <div class="main-text-container">
+            <h1 class="gradient-text right-to-left-animation animation-order-1">I build applications</span>
+            <h1 class="left-to-right-animation animation-order-2">and make them work</h1>
+            <h1 class="left-to-right-animation animation-order-2">as fast as lightning</h1>
+            <div class="brief-description bottom-to-top-animation animation-order-3" style="transition-delay: calc(var(--transition-time) * 3);">
+                Hi! I'm Michael, a backend developer based in Moscow.
+                I create highload server-side applications for any purpose.
+            </div>
+            <div class="main-button-container bottom-to-top-animation animation-order-3" style="transition-delay: calc(var(--transition-time) * 3);">
+                <form action="contact.html">
+                    <!-- <button id="contact-me-button" onmouseover="onMouseOverContactMeButton()" onmouseout="onMouseOutContactMeButton()">Contact me</button>
+                    <div id="contact-me-button-box-shadow"></div> -->
+                    <button class="contact-me-button">Contact me</button>
+                </form>
+                <a class="cv-link smooth-underline" href="https://files.catbox.moe/cbovzp.pdf" onmouseover="onMouseOverCVLink()" onmouseout="onMouseOutCVLink()"><b>Download my CV</b><span id="cv-arrow"></span></a>
+            </div>
+        </div>
+    </div>
+    <script src="scripts/main.js"></script>
+    <script src="scripts/animation.js"></script>
+    <script>window.onload = loadAnimation</script>
+</body>
+</html>
