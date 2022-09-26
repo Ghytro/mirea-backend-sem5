@@ -60,6 +60,10 @@ func (r *ReviewRepository) GetReviews(ctx context.Context, filter *ReviewFilter)
 	var result []*entity.Review
 	err := r.db.RunInTransaction(ctx, func(tx *pg.Tx) error {
 		q := tx.ModelContext(ctx, &result)
+		if filter == nil {
+			return q.Select()
+		}
+
 		if filter.Id != nil {
 			q = q.Where("id = ?", *filter.Id)
 		} else if filter.Ids != nil {

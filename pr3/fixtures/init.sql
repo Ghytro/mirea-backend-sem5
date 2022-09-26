@@ -3,7 +3,7 @@ CREATE TABLE forms (
     name VARCHAR NOT NULL,
     email VARCHAR NOT NULL,
     message VARCHAR NOT NULL,
-    sent_at TIMESTAMPTZ NOT NULL
+    sent_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE reviews (
@@ -11,5 +11,5 @@ CREATE TABLE reviews (
     name VARCHAR NOT NULL,
     rating INT NOT NULL,
     message VARCHAR DEFAULT NULL,
-    posted_at TIMESTAMPTZ NOT NULL
+    posted_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
