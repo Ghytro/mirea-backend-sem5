@@ -19,7 +19,8 @@ func NewAPI(s review.UseCaseReview) *API {
 }
 
 func errorHandler(c *fiber.Ctx, err error) error {
-	return nil
+	_, _err := c.WriteString("<h1>Произошла ошибка: " + err.Error() + "</h1>")
+	return _err
 }
 
 func (a *API) Routers(router fiber.Router, middlewares ...fiber.Handler) {
@@ -47,7 +48,13 @@ func (a *API) getReviews(c *fiber.Ctx) error {
 		}
 		resultHTML += "</div><br>"
 	}
-	resultHTML += "</body></html>"
+	resultHTML += `
+		<form name="leave-review" method="POST" action="http://localhost:8080/api/v1/review">
+			<input type="text" name="name" placeholder="Your name">
+			<input type="text" name="message" placeholder="Comment...">
+			<input type="number" name="rating" max="5" min="1">
+			<input type="submit" value="Submit">
+		</form></body></html>`
 	c.Set("Content-Type", "text/html;charset=utf-8")
 	_, err = c.WriteString(resultHTML)
 	return err
@@ -58,5 +65,8 @@ func (a *API) addReview(c *fiber.Ctx) error {
 	if err := c.BodyParser(form); err != nil {
 		return err
 	}
-	return a.service.AddReview(c.Context(), form)
+	if err := a.service.AddReview(c.Context(), form); err != nil {
+		return err
+	}
+	return c.Redirect("/api/v1/review")
 }

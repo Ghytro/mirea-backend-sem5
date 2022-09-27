@@ -5,6 +5,7 @@ import (
 	"backendmirea/pr3/internal/entity"
 	"backendmirea/pr3/internal/utils"
 	"context"
+	"errors"
 
 	"github.com/go-pg/pg/v10"
 	"github.com/go-pg/pg/v10/orm"
@@ -29,6 +30,12 @@ func (r *ReviewRepository) RunInTransaction(ctx context.Context, fn func(tx *pg.
 }
 
 func (r *ReviewRepository) AddReview(ctx context.Context, review *entity.Review) error {
+	if review.Rating < 1 || review.Rating > 5 {
+		return errors.New("некорректное значение рейтинга")
+	}
+	if review.Name == "" {
+		review.Name = "&lt;Аноним&gt;"
+	}
 	return r.RunInTransaction(ctx, func(tx *pg.Tx) error {
 		_, err := tx.ModelContext(ctx, review).Insert()
 		return err
