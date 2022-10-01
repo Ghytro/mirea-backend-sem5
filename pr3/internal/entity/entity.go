@@ -19,3 +19,10 @@ type Review struct {
 	Message  *string   `pg:"message" json:"message,omitempty" form:"message"`
 	PostedAt time.Time `pg:"posted_at" json:"-"`
 }
+
+type AuthedUser struct {
+	tableName struct{} `pg:"users"`
+
+	UserName string `pg:"username"`
+	Password string `pg:"password"`
+}

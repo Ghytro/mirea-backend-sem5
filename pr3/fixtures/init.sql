@@ -13,3 +13,14 @@ CREATE TABLE reviews (
     message VARCHAR DEFAULT NULL,
     posted_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR UNIQUE NOT NULL,
+    password VARCHAR NOT NULL
+);
+
+INSERT INTO users
+    (username, password)
+VALUES
+    ('ghytro', crypt('mypassword', gen_salt('bf')));

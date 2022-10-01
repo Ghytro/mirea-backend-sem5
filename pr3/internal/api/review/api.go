@@ -23,10 +23,14 @@ func errorHandler(c *fiber.Ctx, err error) error {
 	return _err
 }
 
-func (a *API) Routers(router fiber.Router, middlewares ...fiber.Handler) {
+func (a *API) Routers(router fiber.Router, authHandler fiber.Handler, middlewares ...fiber.Handler) {
 	r := fiber.New(fiber.Config{
 		ErrorHandler: errorHandler,
 	})
+
+	for _, m := range middlewares {
+		r.Use(m)
+	}
 
 	r.Get("/", a.getReviews)
 	r.Post("/", a.addReview)
