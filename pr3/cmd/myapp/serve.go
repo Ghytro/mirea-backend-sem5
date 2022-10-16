@@ -9,6 +9,7 @@ import (
 	"backendmirea/pr3/internal/service/form"
 	"backendmirea/pr3/internal/service/review"
 	"errors"
+	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -42,21 +43,19 @@ func NewApiV1(db *pg.DB, handlers ...api.Handlers) *fiber.App {
 
 	authHandler := func(c *fiber.Ctx) error {
 		auth := c.Get("Authorization")
+		fmt.Println(auth)
 		splAuth := strings.Split(auth, " ")
-		if len(splAuth) != 2 {
+		if len(splAuth) != 3 {
 			return errors.New("неверный формат авторизационной строки")
 		}
 		if splAuth[0] != "Basic" {
 			return errors.New("неверный метод авторизации, поддерживается только Basic")
 		}
-		userNamePass := strings.Split(splAuth[1], ": ")
-		if len(userNamePass) != 2 {
-			return errors.New("неверный формат авторизационной строки")
-		}
-		userName, userPass := userNamePass[0], userNamePass[1]
-		err := db.ModelContext(c.Context(), (*entity.AuthedUser)(nil)).
+		userName, userPass := splAuth[1], splAuth[2]
+		var authedUser entity.AuthedUser
+		err := db.ModelContext(c.Context(), &authedUser).
 			Where(
-				"username = ? AND password = crypt(?, gen_salt('bf'))",
+				"username = ? AND password = crypt(?, password)",
 				userName,
 				userPass,
 			).
@@ -64,6 +63,7 @@ func NewApiV1(db *pg.DB, handlers ...api.Handlers) *fiber.App {
 		if err == pg.ErrNoRows {
 			return errors.New("неверный логин или пароль")
 		}
+		fmt.Println(authedUser)
 		return err
 	}
 	for _, h := range handlers {

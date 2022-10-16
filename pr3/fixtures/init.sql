@@ -20,7 +20,9 @@ CREATE TABLE users (
     password VARCHAR NOT NULL
 );
 
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 INSERT INTO users
     (username, password)
 VALUES
-    ('ghytro', crypt('mypassword', gen_salt('bf')));
+    ('ghytro', crypt('root', gen_salt('bf')));

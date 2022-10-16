@@ -3,7 +3,6 @@ package form
 import (
 	"backendmirea/pr3/internal/entity"
 	"backendmirea/pr3/internal/service/form"
-	"errors"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -40,10 +39,6 @@ func (a *API) Routers(router fiber.Router, authHandler fiber.Handler, middleware
 }
 
 func (a *API) getForms(c *fiber.Ctx) error {
-	adminPassword := c.Query("pass")
-	if adminPassword != "123123" {
-		return errors.New("неверный пароль для доступа к админской странице")
-	}
 	forms, err := a.service.GetForms(c.Context())
 	if err != nil {
 		return err
