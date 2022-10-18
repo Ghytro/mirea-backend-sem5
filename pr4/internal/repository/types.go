@@ -25,7 +25,7 @@ type ReviewFilter struct {
 	Ratings      []int             `json:"ratings"`
 	RatingsRange *utils.Range[int] `json:"ratings_range"`
 
-	Name string
+	Name *string `json:"name"`
 }
 
 type ReviewFieldName string
@@ -35,35 +35,21 @@ const (
 	ReviewFieldPostedAt = ReviewFieldName("posted_at")
 )
 
-type ReviewGetterOrder bool
-
-func (o ReviewGetterOrder) String() (strValue string) {
-	if o == ReviewGetterOrderAsc {
-		return "ASC"
-	}
-	return "DESC"
-}
-
-const (
-	ReviewGetterOrderAsc  = true
-	ReviewGetterOrderDesc = false
-)
-
 type ReviewOrder struct {
-	FieldName ReviewFieldName
-	Order     ReviewGetterOrder
+	FieldName   ReviewFieldName `json:"field_name"`
+	IsAscending bool            `json:"is_ascending"`
 }
 
 type FormFilter struct {
 	idAbleFilter
 	timestampFilter
 
-	Name  *string
-	Names []string
+	Name  *string  `json:"name"`
+	Names []string `json:"names"`
 
-	Email  *string
-	Emails []string
+	Email  *string  `json:"email"`
+	Emails []string `json:"emails"`
 
-	Message  *string
-	Messages []string
+	Message  *string  `json:"message"`
+	Messages []string `json:"messages"`
 }

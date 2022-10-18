@@ -43,17 +43,7 @@ func (a *API) getForms(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	resultHTML := "<html><body>"
-	for _, f := range forms {
-		resultHTML += "<div><h1>Заявка от: " + f.Name + "</h1>"
-		resultHTML += "<h2>Прислана: " + f.SentAt.String() + "<br>"
-		resultHTML += "Отвечать на email: " + f.Email + "</h2>"
-		resultHTML += f.Message + "</div><br>"
-	}
-	resultHTML += "</body></html>"
-	c.Set("Content-Type", "text/html;charset=utf-8")
-	_, err = c.WriteString(resultHTML)
-	return err
+	return c.JSON(forms)
 }
 
 func (a *API) addForm(c *fiber.Ctx) error {

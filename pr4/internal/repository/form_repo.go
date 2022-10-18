@@ -34,7 +34,7 @@ func (r *FormRepository) AddForm(ctx context.Context, form *entity.Form) error {
 }
 
 func (r *FormRepository) GetForms(ctx context.Context) ([]*entity.Form, error) {
-	var result []*entity.Form
+	result := make([]*entity.Form, 0)
 	err := r.RunInTransaction(ctx, func(tx *pg.Tx) error {
 		return tx.ModelContext(ctx, &result).Select()
 	})

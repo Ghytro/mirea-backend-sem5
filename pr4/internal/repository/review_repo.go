@@ -93,11 +93,15 @@ func (r *ReviewRepository) GetReviews(ctx context.Context, filter *ReviewFilter,
 			q = addColumnFilters(q, "id", filter.Id, filter.Ids, filter.IdsRange)
 			q = addColumnFilters(q, "posted_at", filter.Time, filter.Times, filter.TimeRange)
 			q = addColumnFilters(q, "rating", filter.Rating, filter.Ratings, filter.RatingsRange)
-			q = addColumnFilters(q, "name", &filter.Name, nil, nil)
+			q = addColumnFilters(q, "name", filter.Name, nil, nil)
 		}
 
 		if order != nil {
-			q = q.Order(fmt.Sprintf("%s %s", order.FieldName, order.Order.String()))
+			strOrder := "DESC"
+			if order.IsAscending {
+				strOrder = "ASC"
+			}
+			q = q.Order(fmt.Sprintf("%s %s", order.FieldName, strOrder))
 		}
 		if pageNumber != nil && pageSize != nil {
 			q = q.Offset(*pageSize * *pageNumber).Limit(*pageNumber)

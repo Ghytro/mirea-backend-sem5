@@ -43,6 +43,11 @@ func NewApiV1(db *pg.DB, handlers ...api.Handlers) *fiber.App {
 
 	g := r.Group("/api/v1")
 
+	g.Use(func(c *fiber.Ctx) error {
+		c.Set("Content-Type", "application/json")
+		return c.Next()
+	})
+
 	authHandler := func(c *fiber.Ctx) error {
 		auth := c.Get("Authorization")
 		fmt.Println(auth)
