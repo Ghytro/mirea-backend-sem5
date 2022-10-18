@@ -28,7 +28,11 @@ func (r *FormRepository) RunInTransaction(ctx context.Context, fn func(tx *pg.Tx
 
 func (r *FormRepository) AddForm(ctx context.Context, form *entity.Form) error {
 	return r.RunInTransaction(ctx, func(tx *pg.Tx) error {
-		_, err := tx.ModelContext(ctx, form).Insert()
+		_, err := tx.ModelContext(ctx, form).
+			Value("name", "?name").
+			Value("email", "?email").
+			Value("message", "?message").
+			Insert()
 		return err
 	})
 }
@@ -39,4 +43,20 @@ func (r *FormRepository) GetForms(ctx context.Context) ([]*entity.Form, error) {
 		return tx.ModelContext(ctx, &result).Select()
 	})
 	return result, err
+}
+
+func (r *FormRepository) GetForm(ctx context.Context, id entity.PK) (*entity.Form, error) {
+	var model entity.Form
+	if err := r.db.ModelContext(ctx, &model).Where("id = ?", id).Select(); err != nil {
+		return nil, err
+	}
+	return &model, nil
+}
+
+func (r *FormRepository) DeleteForm(ctx context.Context, id entity.PK) error {
+	model := entity.Form{
+		Id: id,
+	}
+	_, err := r.db.ModelContext(ctx, &model).WherePK().Delete()
+	return err
 }

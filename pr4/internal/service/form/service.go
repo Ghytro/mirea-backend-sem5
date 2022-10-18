@@ -5,6 +5,8 @@ import (
 	"context"
 	"errors"
 	"net/mail"
+
+	"github.com/go-pg/pg/v10"
 )
 
 type Service struct {
@@ -38,4 +40,14 @@ func (s *Service) AddForm(ctx context.Context, form *entity.Form) error {
 
 func (s *Service) GetForms(ctx context.Context) ([]*entity.Form, error) {
 	return s.repo.GetForms(ctx)
+}
+
+func (s *Service) DeleteForm(ctx context.Context, id entity.PK) error {
+	return s.repo.RunInTransaction(ctx, func(tx *pg.Tx) error {
+		repo := s.repo.WithTX(tx)
+		if _, err := repo.GetForm(ctx, id); err != nil {
+			return err
+		}
+		return repo.DeleteForm(ctx, id)
+	})
 }

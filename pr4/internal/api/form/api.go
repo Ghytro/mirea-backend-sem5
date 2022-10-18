@@ -3,7 +3,9 @@ package form
 import (
 	"backendmirea/pr3/internal/entity"
 	"backendmirea/pr3/internal/service/form"
+	"strconv"
 
+	"github.com/go-pg/pg/v10"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -18,8 +20,25 @@ func NewAPI(s form.UseCaseForm) *API {
 }
 
 func errorHandler(c *fiber.Ctx, err error) error {
-	_, _err := c.WriteString("<h1>Произошла ошибка: " + err.Error() + "</h1>")
-	return _err
+	if errResponse, ok := err.(*entity.ErrResponse); ok {
+		if _, ok := errResponse.Unwrap().(*entity.ServerError); !ok {
+			errResponse.Err = &entity.ServerError{
+				Message:   errResponse.Err.Error(),
+				Location:  "unknown",
+				ErrorCode: -1,
+			}
+		}
+		return c.Status(errResponse.StatusCode).JSON(errResponse.Err.(*entity.ServerError))
+	}
+	resp := &entity.ErrResponse{
+		StatusCode: fiber.StatusInternalServerError,
+		Err: &entity.ServerError{
+			Message:   err.Error(),
+			Location:  "unknown",
+			ErrorCode: -1,
+		},
+	}
+	return c.Status(resp.StatusCode).JSON(resp.Err.(*entity.ServerError))
 }
 
 func (a *API) Routers(router fiber.Router, authHandler fiber.Handler, middlewares ...fiber.Handler) {
@@ -34,6 +53,7 @@ func (a *API) Routers(router fiber.Router, authHandler fiber.Handler, middleware
 	r.Post("/", a.addForm)
 	r.Use(authHandler)
 	r.Get("/", a.getForms)
+	r.Delete("/:id", a.deleteForm)
 
 	router.Mount("/form", r)
 }
@@ -52,4 +72,39 @@ func (a *API) addForm(c *fiber.Ctx) error {
 		return err
 	}
 	return a.service.AddForm(c.Context(), form)
+}
+
+func (a *API) deleteForm(c *fiber.Ctx) error {
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return &entity.ErrResponse{
+			StatusCode: fiber.StatusBadRequest,
+			Err: &entity.ServerError{
+				Message:   "incorrect id passed",
+				Location:  "form deletion",
+				ErrorCode: -1,
+			},
+		}
+	}
+	if err := a.service.DeleteForm(c.Context(), entity.PK(id)); err != nil {
+		if err == pg.ErrNoRows {
+			return &entity.ErrResponse{
+				StatusCode: fiber.StatusBadRequest,
+				Err: &entity.ServerError{
+					Message:   "no form found with that id",
+					Location:  "form deletion",
+					ErrorCode: -1,
+				},
+			}
+		}
+		return &entity.ErrResponse{
+			StatusCode: fiber.StatusInternalServerError,
+			Err: &entity.ServerError{
+				Message:   "unable to delete form",
+				Location:  "form deletion",
+				ErrorCode: -1,
+			},
+		}
+	}
+	return c.Status(fiber.StatusOK).Send(nil)
 }

@@ -17,15 +17,18 @@ type Repository interface {
 	RunInTransaction(context.Context, func(*pg.Tx) error) error
 }
 
-type Reader interface {
+type Writer interface {
 	AddReview(context.Context, *entity.Review) error
+	DeleteReview(context.Context, entity.PK) error
 }
 
-type Writer interface {
+type Reader interface {
+	GetReview(context.Context, entity.PK) (*entity.Review, error)
 	GetReviews(ctx context.Context, filter *repository.ReviewFilter, order *repository.ReviewOrder, pageNumber *int, pageSize *int) ([]*entity.Review, error)
 }
 
 type UseCaseReview interface {
 	GetReviews(ctx context.Context, filter *repository.ReviewFilter, order *repository.ReviewOrder, pageNumber *int, pageSize *int) ([]*entity.Review, error)
 	AddReview(context.Context, *entity.Review) error
+	DeleteReview(context.Context, entity.PK) error
 }

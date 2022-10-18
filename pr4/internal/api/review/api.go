@@ -4,6 +4,7 @@ import (
 	"backendmirea/pr3/internal/entity"
 	"backendmirea/pr3/internal/service/review"
 	"fmt"
+	"strconv"
 
 	"github.com/go-pg/pg/v10"
 	"github.com/gofiber/fiber/v2"
@@ -61,6 +62,8 @@ func (a *API) Routers(router fiber.Router, authHandler fiber.Handler, middleware
 
 	r.Get("/", a.getReviews)
 	r.Post("/", a.addReview)
+	r.Use(authHandler)
+	r.Delete("/:id", a.deleteReview)
 
 	router.Mount("/review", r)
 }
@@ -107,6 +110,41 @@ func (a *API) addReview(c *fiber.Ctx) error {
 				Location:  "add review",
 				ErrorCode: -1,
 				BaseError: err,
+			},
+		}
+	}
+	return c.Status(fiber.StatusOK).Send(nil)
+}
+
+func (a *API) deleteReview(c *fiber.Ctx) error {
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return &entity.ErrResponse{
+			StatusCode: fiber.StatusBadRequest,
+			Err: &entity.ServerError{
+				Message:   "incorrect format of id",
+				Location:  "review deletion",
+				ErrorCode: -1,
+			},
+		}
+	}
+	if err := a.service.DeleteReview(c.Context(), entity.PK(id)); err != nil {
+		if err == pg.ErrNoRows {
+			return &entity.ErrResponse{
+				StatusCode: fiber.StatusBadRequest,
+				Err: &entity.ServerError{
+					Message:   "review with id not found",
+					Location:  "review deletion",
+					ErrorCode: -1,
+				},
+			}
+		}
+		return &entity.ErrResponse{
+			StatusCode: fiber.StatusInternalServerError,
+			Err: &entity.ServerError{
+				Message:   err.Error(),
+				Location:  "review deletion",
+				ErrorCode: -1,
 			},
 		}
 	}

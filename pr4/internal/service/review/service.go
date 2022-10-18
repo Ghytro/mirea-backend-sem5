@@ -4,6 +4,8 @@ import (
 	"backendmirea/pr3/internal/entity"
 	"backendmirea/pr3/internal/repository"
 	"context"
+
+	"github.com/go-pg/pg/v10"
 )
 
 type Service struct {
@@ -22,4 +24,14 @@ func (s *Service) GetReviews(ctx context.Context, filter *repository.ReviewFilte
 
 func (s *Service) AddReview(ctx context.Context, review *entity.Review) error {
 	return s.repo.AddReview(ctx, review)
+}
+
+func (s *Service) DeleteReview(ctx context.Context, id entity.PK) error {
+	return s.repo.RunInTransaction(ctx, func(tx *pg.Tx) error {
+		repo := s.repo.WithTX(tx)
+		if _, err := repo.GetReview(ctx, id); err != nil {
+			return err
+		}
+		return repo.DeleteReview(ctx, id)
+	})
 }

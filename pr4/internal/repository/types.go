@@ -1,14 +1,15 @@
 package repository
 
 import (
+	"backendmirea/pr3/internal/entity"
 	"backendmirea/pr3/internal/utils"
 	"time"
 )
 
 type idAbleFilter struct {
-	Id       *int              `json:"id"`
-	Ids      []int             `json:"ids"`
-	IdsRange *utils.Range[int] `json:"ids_range"`
+	Id       *entity.PK              `json:"id"`
+	Ids      []entity.PK             `json:"ids"`
+	IdsRange *utils.Range[entity.PK] `json:"ids_range"`
 }
 
 type timestampFilter struct {

@@ -10,6 +10,8 @@ type PK uint
 type Form struct {
 	tableName struct{} `pg:"forms"`
 
+	Id PK `pg:"id,pk" json:"id" form:"id"`
+
 	Name    string    `pg:"name" json:"name" form:"name"`
 	Email   string    `pg:"email" json:"email" form:"email"`
 	Message string    `pg:"message" json:"message" form:"message"`
@@ -53,7 +55,7 @@ type ServerError struct {
 	Message   string `json:"message"`
 	Location  string `json:"location"`
 	ErrorCode int    `json:"code"`
-	BaseError error
+	BaseError error  `json:"-"`
 }
 
 func (e *ServerError) Error() string {

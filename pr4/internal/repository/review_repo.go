@@ -85,6 +85,14 @@ func addColumnFilters[T any](q *orm.Query, columnName string, exact *T, multiple
 	return q
 }
 
+func (r *ReviewRepository) GetReview(ctx context.Context, id entity.PK) (*entity.Review, error) {
+	var model entity.Review
+	if err := r.db.ModelContext(ctx, &model).Where("id = ?", id).Select(); err != nil {
+		return nil, err
+	}
+	return &model, nil
+}
+
 func (r *ReviewRepository) GetReviews(ctx context.Context, filter *ReviewFilter, order *ReviewOrder, pageNumber, pageSize *int) ([]*entity.Review, error) {
 	var result []*entity.Review
 	err := r.db.RunInTransaction(ctx, func(tx *pg.Tx) error {
@@ -112,4 +120,12 @@ func (r *ReviewRepository) GetReviews(ctx context.Context, filter *ReviewFilter,
 		result = make([]*entity.Review, 0)
 	}
 	return result, err
+}
+
+func (r *ReviewRepository) DeleteReview(ctx context.Context, id entity.PK) error {
+	model := entity.Review{
+		Id: id,
+	}
+	_, err := r.db.ModelContext(ctx, &model).WherePK().Delete()
+	return err
 }

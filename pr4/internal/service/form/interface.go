@@ -19,13 +19,16 @@ type Repository interface {
 
 type Reader interface {
 	GetForms(context.Context) ([]*entity.Form, error)
+	GetForm(context.Context, entity.PK) (*entity.Form, error)
 }
 
 type Writer interface {
 	AddForm(context.Context, *entity.Form) error
+	DeleteForm(context.Context, entity.PK) error
 }
 
 type UseCaseForm interface {
 	AddForm(context.Context, *entity.Form) error
 	GetForms(context.Context) ([]*entity.Form, error)
+	DeleteForm(context.Context, entity.PK) error
 }
