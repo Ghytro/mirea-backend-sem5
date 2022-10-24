@@ -51,15 +51,15 @@ func addedWhereRange[T any](q *orm.Query, columnName string, r utils.Range[T]) *
 		args           []interface{}
 	)
 	if r.From != nil {
-		whereCondition += "id >= ?"
+		whereCondition += columnName + " >= ?"
 		args = append(args, r.From)
 		if r.To != nil {
-			whereCondition += " AND id <= ?"
+			whereCondition += fmt.Sprintf(" AND %s <= ?", columnName)
 			args = append(args, r.To)
 		}
 	} else {
 		if r.To != nil {
-			whereCondition += "id <= ?"
+			whereCondition += columnName + " <= ?"
 			args = append(args, r.From)
 		}
 	}
@@ -96,10 +96,10 @@ func (r *ReviewRepository) GetReviews(ctx context.Context, filter *ReviewFilter,
 	err := r.db.RunInTransaction(ctx, func(tx *database.TX) error {
 		q := tx.ModelContext(ctx, &result)
 		if filter != nil {
-			q = addColumnFilters(q, "id", filter.Id, filter.Ids, filter.IdsRange)
-			q = addColumnFilters(q, "posted_at", filter.Time, filter.Times, filter.TimeRange)
-			q = addColumnFilters(q, "rating", filter.Rating, filter.Ratings, filter.RatingsRange)
-			q = addColumnFilters(q, "name", filter.Name, nil, nil)
+			q = addColumnFilters(q, `"review"."id"`, filter.Id, filter.Ids, filter.IdsRange)
+			q = addColumnFilters(q, `"review"."posted_at"`, filter.Time, filter.Times, filter.TimeRange)
+			q = addColumnFilters(q, `"review"."rating"`, filter.Rating, filter.Ratings, filter.RatingsRange)
+			q = addColumnFilters(q, `"review"."name"`, filter.Name, nil, nil)
 		}
 
 		if order != nil {
@@ -107,7 +107,7 @@ func (r *ReviewRepository) GetReviews(ctx context.Context, filter *ReviewFilter,
 			if order.IsAscending {
 				strOrder = "ASC"
 			}
-			q = q.Order(fmt.Sprintf("%s %s", order.FieldName, strOrder))
+			q = q.Order(fmt.Sprintf("review.%s %s", order.FieldName, strOrder))
 		}
 		if pageNumber != nil && pageSize != nil {
 			q = q.Offset(*pageSize * *pageNumber).Limit(*pageNumber)
