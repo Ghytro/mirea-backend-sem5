@@ -12,10 +12,11 @@ type Form struct {
 
 	Id PK `pg:"id,pk" json:"id" form:"id"`
 
-	Name    string    `pg:"name" json:"name" form:"name"`
-	Email   string    `pg:"email" json:"email" form:"email"`
+	UserId PK          `pg:"user_id" json:"-"`
+	User   *AuthedUser `pg:"rel:has-one" json:"sent_by"`
+
 	Message string    `pg:"message" json:"message" form:"message"`
-	SentAt  time.Time `pg:"sent_at" json:"-"`
+	SentAt  time.Time `pg:"sent_at" json:"sent_at"`
 }
 
 type Review struct {
@@ -23,7 +24,9 @@ type Review struct {
 
 	Id PK `pg:"id,pk" json:"id" form:"id"`
 
-	Name     string    `pg:"name" json:"name" form:"name"`
+	UserId PK          `pg:"user_id" json:"-"`
+	User   *AuthedUser `pg:"rel:has-one" json:"sent_by"`
+
 	Rating   int       `pg:"rating" json:"rating" form:"rating"`
 	Message  *string   `pg:"message" json:"message,omitempty" form:"message"`
 	PostedAt time.Time `pg:"posted_at" json:"posted_at"`
@@ -34,8 +37,12 @@ type AuthedUser struct {
 
 	Id PK `pg:"id,pk" json:"id" form:"id"`
 
-	UserName string `pg:"username"`
-	Password string `pg:"password"`
+	UserName string `pg:"username" json:"username"`
+	Password string `pg:"password" json:"-"`
+
+	Email   string  `pg:"email" json:"email"`
+	Name    *string `pg:"name" json:"name"`
+	IsAdmin bool    `pg:"is_admin" json:"-"`
 }
 
 type ErrResponse struct {

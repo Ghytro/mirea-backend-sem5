@@ -61,9 +61,10 @@ func (a *API) Routers(router fiber.Router, authHandler fiber.Handler, middleware
 	}
 
 	r.Get("/", a.getReviews)
-	r.Post("/", a.addReview)
 	r.Use(authHandler)
+	r.Post("/", a.addReview)
 	r.Delete("/:id", a.deleteReview)
+	r.Patch("/:id", a.updateReview)
 
 	router.Mount("/review", r)
 }
@@ -102,6 +103,18 @@ func (a *API) addReview(c *fiber.Ctx) error {
 			Err:        errParsingJson("review add", err),
 		}
 	}
+	user, ok := c.Locals("authed_user").(*entity.AuthedUser)
+	if !ok {
+		return &entity.ErrResponse{
+			StatusCode: fiber.StatusUnauthorized,
+			Err: &entity.ServerError{
+				Message:   "debug: unable to get auth entity",
+				Location:  "form get",
+				ErrorCode: -1,
+			},
+		}
+	}
+	form.UserId = user.Id
 	if err := a.service.AddReview(c.Context(), form); err != nil {
 		return &entity.ErrResponse{
 			StatusCode: fiber.StatusInternalServerError,
@@ -113,7 +126,7 @@ func (a *API) addReview(c *fiber.Ctx) error {
 			},
 		}
 	}
-	return c.Status(fiber.StatusOK).Send(nil)
+	return c.JSON(AddReviewResponse{ReviewId: form.Id})
 }
 
 func (a *API) deleteReview(c *fiber.Ctx) error {
@@ -128,7 +141,18 @@ func (a *API) deleteReview(c *fiber.Ctx) error {
 			},
 		}
 	}
-	if err := a.service.DeleteReview(c.Context(), entity.PK(id)); err != nil {
+	user, ok := c.Locals("authed_user").(*entity.AuthedUser)
+	if !ok {
+		return &entity.ErrResponse{
+			StatusCode: fiber.StatusUnauthorized,
+			Err: &entity.ServerError{
+				Message:   "debug: unable to get auth entity",
+				Location:  "form get",
+				ErrorCode: -1,
+			},
+		}
+	}
+	if err := a.service.DeleteReview(c.Context(), user.Id, entity.PK(id)); err != nil {
 		if err == pg.ErrNoRows {
 			return &entity.ErrResponse{
 				StatusCode: fiber.StatusBadRequest,
@@ -149,4 +173,49 @@ func (a *API) deleteReview(c *fiber.Ctx) error {
 		}
 	}
 	return c.Status(fiber.StatusOK).Send(nil)
+}
+
+func (a *API) updateReview(c *fiber.Ctx) error {
+	reviewId, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return &entity.ErrResponse{
+			StatusCode: fiber.StatusBadRequest,
+			Err: &entity.ServerError{
+				Message:   "incorrect review id",
+				Location:  "review update",
+				ErrorCode: -1,
+			},
+		}
+	}
+	var review entity.Review
+	if err := c.BodyParser(&review); err != nil {
+		return &entity.ErrResponse{
+			StatusCode: fiber.StatusBadRequest,
+			Err:        errParsingJson("review update", err),
+		}
+	}
+	review.Id = entity.PK(reviewId)
+	user, ok := c.Locals("authed_user").(*entity.AuthedUser)
+	if !ok {
+		return &entity.ErrResponse{
+			StatusCode: fiber.StatusUnauthorized,
+			Err: &entity.ServerError{
+				Message:   "debug: unable to get auth entity",
+				Location:  "review update",
+				ErrorCode: -1,
+			},
+		}
+	}
+	if err := a.service.UpdateReview(c.Context(), user.Id, &review); err != nil {
+		return &entity.ErrResponse{
+			StatusCode: fiber.StatusBadRequest,
+			Err: &entity.ServerError{
+				Message:   err.Error(),
+				BaseError: err,
+				Location:  "review_update",
+				ErrorCode: -1,
+			},
+		}
+	}
+	return c.Send(nil)
 }

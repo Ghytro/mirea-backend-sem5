@@ -26,7 +26,7 @@ func (r *ReviewRepository) WithTX(tx database.DBI) *ReviewRepository {
 	return NewReviewRepository(tx)
 }
 
-func (r *ReviewRepository) RunInTransaction(ctx context.Context, fn func(tx *pg.Tx) error) error {
+func (r *ReviewRepository) RunInTransaction(ctx context.Context, fn func(tx *database.TX) error) error {
 	return r.db.RunInTransaction(ctx, fn)
 }
 
@@ -34,14 +34,12 @@ func (r *ReviewRepository) AddReview(ctx context.Context, review *entity.Review)
 	if review.Rating < 1 || review.Rating > 5 {
 		return errors.New("некорректное значение рейтинга")
 	}
-	if review.Name == "" {
-		review.Name = "<Аноним>"
-	}
-	return r.RunInTransaction(ctx, func(tx *pg.Tx) error {
+	return r.RunInTransaction(ctx, func(tx *database.TX) error {
 		_, err := tx.ModelContext(ctx, review).
-			Value("name", "?", review.Name).
 			Value("rating", "?", review.Rating).
 			Value("message", "?", review.Message).
+			Value("user_id", "?", review.UserId).
+			Returning("*").
 			Insert()
 		return err
 	})
@@ -95,7 +93,7 @@ func (r *ReviewRepository) GetReview(ctx context.Context, id entity.PK) (*entity
 
 func (r *ReviewRepository) GetReviews(ctx context.Context, filter *ReviewFilter, order *ReviewOrder, pageNumber, pageSize *int) ([]*entity.Review, error) {
 	var result []*entity.Review
-	err := r.db.RunInTransaction(ctx, func(tx *pg.Tx) error {
+	err := r.db.RunInTransaction(ctx, func(tx *database.TX) error {
 		q := tx.ModelContext(ctx, &result)
 		if filter != nil {
 			q = addColumnFilters(q, "id", filter.Id, filter.Ids, filter.IdsRange)
@@ -114,7 +112,7 @@ func (r *ReviewRepository) GetReviews(ctx context.Context, filter *ReviewFilter,
 		if pageNumber != nil && pageSize != nil {
 			q = q.Offset(*pageSize * *pageNumber).Limit(*pageNumber)
 		}
-		return q.Select()
+		return q.Relation("User").Select()
 	})
 	if result == nil {
 		result = make([]*entity.Review, 0)
@@ -128,4 +126,34 @@ func (r *ReviewRepository) DeleteReview(ctx context.Context, id entity.PK) error
 	}
 	_, err := r.db.ModelContext(ctx, &model).WherePK().Delete()
 	return err
+}
+
+func (r *ReviewRepository) UpdateReview(ctx context.Context, review *entity.Review) error {
+	var (
+		setStr string
+		args   []interface{}
+	)
+	if review.Message != nil {
+		setStr += "message = ?"
+		args = append(args, review.Message)
+	}
+	if review.Rating > 0 && review.Rating < 6 {
+		setStr += ", rating = ?"
+		args = append(args, review.Rating)
+	}
+	if setStr == "" {
+		return nil
+	}
+
+	return r.db.RunInTransaction(ctx, func(tx *database.TX) error {
+		var rev entity.Review
+		if err := tx.ModelContext(ctx, &rev).Where("id = ?", review.Id).Select(); err != nil {
+			return err
+		}
+		_, err := tx.ModelContext(ctx, &rev).
+			Set(setStr, args...).
+			Where("id = ?", review.Id).
+			Update()
+		return err
+	})
 }

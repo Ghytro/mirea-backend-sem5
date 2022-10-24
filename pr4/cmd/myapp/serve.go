@@ -4,6 +4,7 @@ import (
 	"backendmirea/pr3/internal/api"
 	form2 "backendmirea/pr3/internal/api/form"
 	review2 "backendmirea/pr3/internal/api/review"
+	"backendmirea/pr3/internal/database"
 	"backendmirea/pr3/internal/entity"
 	"backendmirea/pr3/internal/logging"
 	"backendmirea/pr3/internal/repository"
@@ -26,9 +27,10 @@ func serve() {
 	}
 	db := pg.Connect(opt)
 	db.AddQueryHook(logging.DBLogger{})
+	myDB := &database.DB{DB: db}
 
-	formRepository := repository.NewFormRepository(db)
-	reviewRepository := repository.NewReviewRepository(db)
+	formRepository := repository.NewFormRepository(myDB)
+	reviewRepository := repository.NewReviewRepository(myDB)
 
 	formService := form.NewService(formRepository)
 	reviewService := review.NewService(reviewRepository)
@@ -72,7 +74,7 @@ func NewApiV1(db *pg.DB, handlers ...api.Handlers) *fiber.App {
 			}
 			return err
 		}
-		fmt.Println(authedUser)
+		c.Locals("authed_user", &authedUser)
 		return c.Next()
 	}
 	for _, h := range handlers {
