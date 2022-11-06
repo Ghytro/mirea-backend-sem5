@@ -3,10 +3,12 @@ package database
 import (
 	"context"
 	"os"
+	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/gridfs"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 const DefaultFileDBName = "mydb"
@@ -22,11 +24,13 @@ type FileDB struct {
 }
 
 func NewFileDB(ctx context.Context, url string) *FileDB {
-	opts := options.Client()
-	opts.ApplyURI(os.Getenv("FILE_DB_URL"))
-	opts.SetMaxPoolSize(5) // должно хватить
-	mongoConn, err := mongo.Connect(context.Background(), opts)
+	mongoConn, err := mongo.Connect(context.Background(), options.Client().ApplyURI(url).SetMaxPoolSize(5))
 	if err != nil {
+		panic(err)
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*20)
+	defer cancel()
+	if err := mongoConn.Ping(ctx, readpref.Primary()); err != nil {
 		panic(err)
 	}
 	bucket, err := gridfs.NewBucket(mongoConn.Database(DefaultFileDBName))

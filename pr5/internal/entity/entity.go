@@ -14,6 +14,11 @@ type FileID struct {
 	primitive.ObjectID
 }
 
+func (id FileID) String() string {
+	s := id.ObjectID.String()
+	return s[10 : len(s)-2]
+}
+
 type File struct {
 	File         io.Reader
 	OrigFileName string

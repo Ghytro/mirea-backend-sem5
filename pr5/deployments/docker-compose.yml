@@ -10,9 +10,10 @@ services:
       target: prod
     environment:
       - DB_URL=postgres://postgres:mydbpassword@dockerdev.db:5432/postgres?sslmode=disable&
-      - FILE_DB_URL=mongodb://root:mysecretpassword@mymongodatabase:27017/mydb
+      - FILE_DB_URL=mongodb://root:mysecretpassword@mongo.dev:27017/mydb?ssl=false&authSource=admin
     depends_on:
       - db
+      - mongo
 
   db:
     hostname: dockerdev.db
@@ -26,12 +27,15 @@ services:
       - "5432:5432"
   
   mongo:
-    hostname: mymongodatabase
+    hostname: mongo.dev
     image: mongo
     container_name: mongo-db
     environment:
+      - MONGO_INITDB_DATABASE=mydb
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=mysecretpassword
+    ports:
+      - "27017:27017"
 
   web-server:
     image: nginx

@@ -6,6 +6,8 @@ import (
 	"bytes"
 	"context"
 	"io"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type FileRepository struct {
@@ -23,7 +25,7 @@ func (r *FileRepository) UploadFile(ctx context.Context, file *entity.File) (ent
 	}
 	defer uploadStream.Close()
 
-	fileID := uploadStream.FileID.(entity.FileID)
+	fileID := entity.FileID{uploadStream.FileID.(primitive.ObjectID)}
 	data, err := io.ReadAll(file.File)
 	if err != nil {
 		return entity.NilFileID, err
@@ -33,7 +35,7 @@ func (r *FileRepository) UploadFile(ctx context.Context, file *entity.File) (ent
 }
 
 func (r *FileRepository) DownloadFile(ctx context.Context, fileID entity.FileID) (*entity.File, error) {
-	downloadStream, err := r.db.OpenDownloadStream(fileID)
+	downloadStream, err := r.db.OpenDownloadStream(fileID.ObjectID)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +44,7 @@ func (r *FileRepository) DownloadFile(ctx context.Context, fileID entity.FileID)
 	if ok {
 		downloadStream.SetReadDeadline(deadline)
 	}
-	var b []byte
+	b := make([]byte, downloadStream.GetFile().Length)
 	_, err = downloadStream.Read(b)
 	if err != nil {
 		return nil, err

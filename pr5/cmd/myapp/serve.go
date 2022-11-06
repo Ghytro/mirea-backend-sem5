@@ -32,6 +32,7 @@ func serve() {
 	myDB := &database.DB{DB: db}
 
 	fileDB := database.NewFileDB(db.Context(), os.Getenv("FILE_DB_URL"))
+
 	filesRepo := repository.NewFilesRepository(fileDB)
 	filesService := files.NewService(filesRepo)
 	filesApi := files2.NewAPI(filesService)

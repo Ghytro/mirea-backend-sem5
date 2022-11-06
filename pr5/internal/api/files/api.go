@@ -2,6 +2,8 @@ package files
 
 import (
 	"backendmirea/pr3/internal/entity"
+	"bytes"
+	"fmt"
 	"io"
 	"os"
 
@@ -78,16 +80,20 @@ func (a *API) getFile(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
+	defer os.Remove(tempFile.Name())
 	if _, err := io.Copy(tempFile, file.File); err != nil {
 		return err
 	}
+	fmt.Println(tempFile.Name())
 	return c.Download(tempFile.Name(), file.OrigFileName)
 }
 
 func (a *API) postFile(c *fiber.Ctx) error {
+	var buf bytes.Buffer
+	buf.Write(c.Body())
 	fileID, err := a.service.UploadFile(c.Context(), &entity.File{
 		OrigFileName: c.Get("X-Filename"),
-		File:         c.Context().RequestBodyStream(),
+		File:         &buf,
 	})
 	if err != nil {
 		return &entity.ErrResponse{
