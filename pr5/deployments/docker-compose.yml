@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  app:
+    hostname: mireabackend.dev
+    container_name: myapp
+    build:
+      context: ../
+      dockerfile: ./deployments/Dockerfile.app
+      target: prod
+    environment:
+      - DB_URL=postgres://postgres:mydbpassword@dockerdev.db:5432/postgres?sslmode=disable&
+      - FILE_DB_URL=mongodb://root:mysecretpassword@mymongodatabase:27017/mydb
+    depends_on:
+      - db
+
+  db:
+    hostname: dockerdev.db
+    build:
+      dockerfile: ./deployments/Dockerfile.postgresql
+      context: ../
+    environment:
+      - POSTGRES_PASSWORD=mydbpassword
+    container_name: myapp-db
+    ports:
+      - "5432:5432"
+  
+  mongo:
+    hostname: mymongodatabase
+    image: mongo
+    container_name: mongo-db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=mysecretpassword
+
+  web-server:
+    image: nginx
+    container_name: myapp-nginx
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./hosts:/etc/nginx/conf.d
+      - ../web:/web
+    depends_on:
+      - app
