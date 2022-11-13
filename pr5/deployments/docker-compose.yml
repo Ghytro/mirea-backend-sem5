@@ -11,6 +11,7 @@ services:
     environment:
       - DB_URL=postgres://postgres:mydbpassword@dockerdev.db:5432/postgres?sslmode=disable&
       - FILE_DB_URL=mongodb://root:mysecretpassword@mongo.dev:27017/mydb?ssl=false&authSource=admin
+      - REDIS_URL=redis://:mysecretpassword@redis.dev:6379/0
     depends_on:
       - db
       - mongo
@@ -36,6 +37,14 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=mysecretpassword
     ports:
       - "27017:27017"
+  
+  redis:
+    hostname: redis.dev
+    image: redis:7.0.5
+    container_name: redisdb
+    command: redis-server --requirepass mysecretpassword
+    ports:
+      - "6379:6379"
 
   web-server:
     image: nginx

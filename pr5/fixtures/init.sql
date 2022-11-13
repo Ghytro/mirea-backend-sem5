@@ -1,7 +1,7 @@
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR UNIQUE NOT NULL,
-    name VARCHAR,
+    name VARCHAR NOT NULL,
     email VARCHAR NOT NULL,
     password VARCHAR NOT NULL,
     is_admin BOOLEAN NOT NULL DEFAULT FALSE
@@ -25,6 +25,6 @@ CREATE TABLE reviews (
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 INSERT INTO users
-    (username, password, email, is_admin)
+    (username, password, email, is_admin, name)
 VALUES
-    ('ghytro', crypt('root', gen_salt('bf')), 'some_email@gmail.com', TRUE);
+    ('ghytro', crypt('root', gen_salt('bf')), 'some_email@gmail.com', TRUE, 'Michael');

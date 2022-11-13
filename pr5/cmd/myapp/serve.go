@@ -2,6 +2,7 @@ package main
 
 import (
 	"backendmirea/pr3/internal/api"
+	auth2 "backendmirea/pr3/internal/api/auth"
 	files2 "backendmirea/pr3/internal/api/files"
 	form2 "backendmirea/pr3/internal/api/form"
 	review2 "backendmirea/pr3/internal/api/review"
@@ -9,6 +10,7 @@ import (
 	"backendmirea/pr3/internal/entity"
 	"backendmirea/pr3/internal/logging"
 	"backendmirea/pr3/internal/repository"
+	"backendmirea/pr3/internal/service/auth"
 	"backendmirea/pr3/internal/service/files"
 	"backendmirea/pr3/internal/service/form"
 	"backendmirea/pr3/internal/service/review"
@@ -19,6 +21,7 @@ import (
 	"strings"
 
 	"github.com/go-pg/pg/v10"
+	"github.com/go-redis/redis/v9"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -33,6 +36,12 @@ func serve() {
 
 	fileDB := database.NewFileDB(db.Context(), os.Getenv("FILE_DB_URL"))
 
+	opts, err := redis.ParseURL(os.Getenv("REDIS_URL"))
+	if err != nil {
+		panic(err)
+	}
+	redisClient := redis.NewClient(opts)
+
 	filesRepo := repository.NewFilesRepository(fileDB)
 	filesService := files.NewService(filesRepo)
 	filesApi := files2.NewAPI(filesService)
@@ -45,10 +54,14 @@ func serve() {
 
 	formApi := form2.NewAPI(formService)
 	reviewApi := review2.NewAPI(reviewService)
-	NewApiV1(db, formApi, reviewApi, filesApi).Listen(":3001")
+
+	authRepo := repository.NewAuthRepository(myDB, redisClient)
+	authService := auth.NewService(authRepo)
+	authApi := auth2.NewAPI(authService)
+	NewApiV1(db, redisClient, formApi, reviewApi, filesApi, authApi).Listen(":3001")
 }
 
-func NewApiV1(db *pg.DB, handlers ...api.Handlers) *fiber.App {
+func NewApiV1(db *pg.DB, cacheDB *redis.Client, handlers ...api.Handlers) *fiber.App {
 	r := fiber.New()
 
 	g := r.Group("/api/v1")
@@ -62,25 +75,25 @@ func NewApiV1(db *pg.DB, handlers ...api.Handlers) *fiber.App {
 		auth := c.Get("Authorization")
 		fmt.Println(auth)
 		splAuth := strings.Split(auth, " ")
-		if len(splAuth) != 3 {
+		if len(splAuth) != 2 {
 			return errors.New("неверный формат авторизационной строки")
 		}
-		if splAuth[0] != "Basic" {
-			return errors.New("неверный метод авторизации, поддерживается только Basic")
+		if splAuth[0] != "Token" {
+			return errors.New("неверный метод авторизации, поддерживается только Token")
 		}
-		userName, userPass := splAuth[1], splAuth[2]
+		token := splAuth[1]
 		var authedUser entity.AuthedUser
-		if err := db.ModelContext(c.Context(), &authedUser).
-			Where(
-				"username = ? AND password = crypt(?, password)",
-				userName,
-				userPass,
-			).
-			Select(); err != nil {
-			if err == pg.ErrNoRows {
-				return errors.New("неверный логин или пароль")
+		err := cacheDB.HGetAll(c.Context(), token).Scan(&authedUser)
+		if err != nil {
+			log.Println(err)
+			return &entity.ErrResponse{
+				StatusCode: fiber.StatusUnauthorized,
+				Err: &entity.ServerError{
+					Message:   "unauthorized",
+					Location:  "auth",
+					ErrorCode: -1,
+				},
 			}
-			return err
 		}
 		c.Locals("authed_user", &authedUser)
 		return c.Next()

@@ -1,6 +1,8 @@
 package entity
 
 import (
+	"bytes"
+	"encoding/binary"
 	"fmt"
 	"io"
 	"time"
@@ -9,6 +11,21 @@ import (
 )
 
 type PK uint
+
+func (pk PK) MarshalBinary() ([]byte, error) {
+	var buf bytes.Buffer
+	err := binary.Write(&buf, binary.BigEndian, uint32(pk))
+	return buf.Bytes(), err
+}
+
+func (pk *PK) UnmarshalBinary(b []byte) error {
+	var result uint32
+	var buf bytes.Buffer
+	buf.Write(b)
+	err := binary.Read(&buf, binary.BigEndian, &result)
+	*pk = PK(result)
+	return err
+}
 
 type FileID struct {
 	primitive.ObjectID
@@ -59,14 +76,19 @@ type Review struct {
 type AuthedUser struct {
 	tableName struct{} `pg:"users"`
 
-	Id PK `pg:"id,pk" json:"id" form:"id"`
+	Id PK `pg:"id,pk" json:"id" form:"id" redis:"id"`
 
-	UserName string `pg:"username" json:"username"`
-	Password string `pg:"password" json:"-"`
+	UserName string `pg:"username" json:"username" redis:"username"`
+	Password string `pg:"password" json:"-" redis:"password"`
 
-	Email   string  `pg:"email" json:"email"`
-	Name    *string `pg:"name" json:"name"`
-	IsAdmin bool    `pg:"is_admin" json:"-"`
+	Email   string `pg:"email" json:"email" redis:"email"`
+	Name    string `pg:"name" json:"name" redis:"name"`
+	IsAdmin bool   `pg:"is_admin" json:"-" redis:"is_admin"`
+}
+
+type AuthToken struct {
+	Token   string    `json:"token"`
+	Expires time.Time `json:"expires"`
 }
 
 type ErrResponse struct {
