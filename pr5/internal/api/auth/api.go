@@ -3,6 +3,7 @@ package auth
 import (
 	"backendmirea/pr3/internal/entity"
 	"fmt"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -73,6 +74,11 @@ func (a *API) startSession(c *fiber.Ctx) error {
 		}
 	}
 	fmt.Println("here")
+	c.Cookie(&fiber.Cookie{
+		Name:    "username",
+		Value:   tokenReq.Username,
+		Expires: time.Now().Add(time.Hour * 24 * 7),
+	})
 	return c.JSON(&entity.AuthToken{
 		Token:   token,
 		Expires: expires,

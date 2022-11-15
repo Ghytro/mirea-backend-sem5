@@ -44,6 +44,7 @@ func (a *API) Routers(router fiber.Router, authHandler fiber.Handler, middleware
 	r := fiber.New(fiber.Config{
 		ErrorHandler: errorHandler,
 	})
+	r.Use(authHandler)
 	for _, m := range middlewares {
 		r.Use(m)
 	}
