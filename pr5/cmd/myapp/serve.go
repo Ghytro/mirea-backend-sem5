@@ -6,6 +6,7 @@ import (
 	files2 "backendmirea/pr3/internal/api/files"
 	form2 "backendmirea/pr3/internal/api/form"
 	review2 "backendmirea/pr3/internal/api/review"
+	"backendmirea/pr3/internal/api/tempdata"
 	"backendmirea/pr3/internal/database"
 	"backendmirea/pr3/internal/entity"
 	"backendmirea/pr3/internal/logging"
@@ -58,7 +59,9 @@ func serve() {
 	authRepo := repository.NewAuthRepository(myDB, redisClient)
 	authService := auth.NewService(authRepo)
 	authApi := auth2.NewAPI(authService)
-	NewApiV1(db, redisClient, formApi, reviewApi, filesApi, authApi).Listen(":3001")
+
+	tempDataApi := tempdata.NewAPI()
+	NewApiV1(db, redisClient, formApi, reviewApi, filesApi, authApi, tempDataApi).Listen(":3001")
 }
 
 func NewApiV1(db *pg.DB, cacheDB *redis.Client, handlers ...api.Handlers) *fiber.App {
